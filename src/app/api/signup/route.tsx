@@ -10,7 +10,7 @@ export async function POST(request:Request){
 
         const existingUserVerifiedByUsername = await UserModel.findOne({
             username,
-            isVerified:true
+            isVerified: true
         })
 
         if(existingUserVerifiedByUsername){
@@ -21,7 +21,7 @@ export async function POST(request:Request){
         }
         const existingUserByEmail = await UserModel.findOne({email})
 
-        const verifyCode = Math.floor(100000+ Math.random()*900000).toString()
+        const verifyCode = Math.floor(100000 + Math.random()*900000).toString()
         
         if(existingUserByEmail){
             if(existingUserByEmail.isVerified){
@@ -29,7 +29,7 @@ export async function POST(request:Request){
                     succes:false,
                     message:"User already exist with this email"
                 },{status:400})
-            }else{
+            } else {
                const hashedPassword = await bcrypt.hash(password, 10) 
                existingUserByEmail.password = hashedPassword;
                existingUserByEmail.verifyCode = verifyCode;
@@ -45,7 +45,7 @@ export async function POST(request:Request){
         const newUser = new UserModel({
             username,
             email,
-            password:hashedPassword,
+            password: hashedPassword,
             verifyCode,
             verifyCodeExpiry:expiryDate,
             isVerified:false,
@@ -62,8 +62,8 @@ export async function POST(request:Request){
 
         if(!emailResponse.success){
             return Response.json({
-                succes:false,
-                message:emailResponse.message
+                succes: false,
+                message: emailResponse.message
             },{status:500})
         }    
         return Response.json({

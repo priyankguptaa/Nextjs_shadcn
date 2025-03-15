@@ -9,18 +9,18 @@ const UsernameQuerySchema = z.object({
 
 export async function GET(request:Request){
     await dbConnect()
-
     try {
-        const{searchParams}= new URL(request.url)
+        const{searchParams} = new URL(request.url)
         const queryParam = {
             username: searchParams.get('username')
         }
         const result = UsernameQuerySchema.safeParse(queryParam)
+        
         if(!result.success){
             const usernameErrors = result.error.format().username?._errors || []
             return Response.json({
                 success:false,
-                messsage:"invalid query parameters"
+                message:usernameErrors?.length > 0 ? usernameErrors.join(", ") : "invalid parameters"
             },{status:400})
         }
         const{username} = result.data
@@ -30,19 +30,19 @@ export async function GET(request:Request){
         if(existingVerifiedUser){
             return Response.json({
                 success:false,
-                messsage:"username is already taken"
+                message:"username is already taken"
             },{status:400})
         }
         return Response.json({
             success:true,
-            messsage:"username is unique"
+            message:"username is unique"
         },{status:400})
 
     } catch (error) {
         console.log("Error checking username", error)
         return Response.json({
             success:"false",
-            message: "error checking username"
+            message: "Error checking username"
         },
         {status:500}
     )

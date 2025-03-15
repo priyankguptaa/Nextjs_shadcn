@@ -1,6 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
-import { console } from "inspector";
 
 export async function POST(request: Request){
     await dbConnect()
@@ -15,7 +14,7 @@ export async function POST(request: Request){
             },{status:500})
         }
         const isCodeValid = user.verifyCode === code
-        const isCodeNotExpired = new Date(user.verifyCodeExpiry)> new Date()
+        const isCodeNotExpired = new Date(user.verifyCodeExpiry) > new Date()
         if(isCodeValid && isCodeNotExpired){
             user.isVerified = true
             await user.save()

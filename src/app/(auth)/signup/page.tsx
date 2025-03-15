@@ -13,7 +13,7 @@ import { ApiResponse } from "@/types/ApiResponse"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Loader, Loader2 } from 'lucide-react';
+import {  Loader2 } from 'lucide-react';
 
 
 function page() {
@@ -33,22 +33,23 @@ function page() {
       password:''
     }
   })
+  
   useEffect(()=>{
-    const checkUsernameUnique = async()=>{
+    const checkUsernameUnique = async () =>{
       if(username){
         setIsCheckingUsername(true)
         setUsernameMessage("")
         try {
-          const response = await axios.get(`/api/check-username-unique?username=${username}`)
-          // console.log (response)
-          // let message = response.data.message
+          const response = await axios.get(`/api/check-username-unique?username=${username}`)          
+          // const message = response.data.message
           // setUsernameMessage(message)
           setUsernameMessage(response.data.message)
-        } catch (error) {
+        } 
+        catch (error) {
           const axiosError = error as AxiosError<ApiResponse>;
           setUsernameMessage(
-            axiosError.response?.data.message?? "Error checking username"
-          )
+            axiosError.response?.data.message ?? "",
+          )          
         }
         finally{
           setIsCheckingUsername(false)
@@ -77,8 +78,8 @@ function page() {
         })
         setIsSubmitting(false)
     }
+    
   }
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md py-8 space-y-8 bg-white rounded-lg">
@@ -100,12 +101,12 @@ function page() {
                         {...field} 
                         onChange = {(e)=> {
                           field.onChange(e)
-                              debounced(e.target.value)
+                          debounced(e.target.value)
                         }}
                         />
                     </FormControl>
                        {isCheckingUsername && <Loader2 className="animate-spin"/>}
-                       <p className={`text-sm ${usernameMessage === "username is unique"? "text-green-500" : "text-red-500" }`}>test:{usernameMessage}</p>
+                       <p className={`text-sm ${usernameMessage === "username is unique" ? "text-green-500" : "text-red-500" }`}>test:{usernameMessage}</p>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -133,10 +134,6 @@ function page() {
                     <FormControl>
                       <Input type="password" placeholder="password"
                         {...field} 
-                        onChange = {(e)=> {
-                          field.onChange(e)
-                          setUsername(e.target.value)
-                        }}
                        />
                     </FormControl>
                     <FormMessage />
